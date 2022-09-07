@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Customer {
@@ -29,7 +28,6 @@ public class Customer {
 
 	public void addRental(Rental rental) {
 		rentals.add(rental);
-
 	}
 
 	public String getReport() {
@@ -45,22 +43,8 @@ public class Customer {
 			int daysRented = 0;
 			double eachCharge = 0;
 
-			if (each.getStatus() == 1) { // returned Video
-				long diff = each.getReturnDate().getTime() - each.getRentDate().getTime();
-				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-			} else { // not yet returned
-				long diff = new Date().getTime() - each.getRentDate().getTime();
-				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-			}
-
-			eachPoint++;
-
-			if ((each.getVideo().getPriceCode() == Video.NEW_RELEASE) )
-				eachPoint++;
-
-			if ( daysRented > each.getDaysRentedLimit() )
-				eachPoint -= Math.min(eachPoint, each.getVideo().getLateReturnPointPenalty()) ;
-
+			daysRented = each.getDaysRented();
+			eachPoint = each.getVideo().getPoint(daysRented, each.getDaysRentedLimit());
 			eachCharge = each.getVideo().getPrice(daysRented);
 			result += "\t" + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: " + eachCharge
 					+ "\tPoint: " + eachPoint + "\n";
@@ -78,6 +62,7 @@ public class Customer {
 		if ( totalPoint >= 30 ) {
 			System.out.println("Congrat! You earned two free coupon");
 		}
+
 		return result ;
 	}
 }

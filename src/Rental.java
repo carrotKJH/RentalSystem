@@ -48,15 +48,7 @@ public class Rental {
 
 	public int getDaysRentedLimit() {
 		int limit = 0 ;
-		int daysRented ;
-		if (getStatus() == 1) { // returned Video
-			long diff = returnDate.getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-		} else { // not yet returned
-			long diff = new Date().getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-		}
-		if ( daysRented <= 2) return limit ;
+		if (getDaysRented() <= 2) return limit ;
 
 		switch ( video.getVideoType() ) {
 			case Video.VHS: limit = 5 ; break ;
@@ -64,5 +56,18 @@ public class Rental {
 			case Video.DVD: limit = 2 ; break ;
 		}
 		return limit ;
+	}
+
+
+	public int getDaysRented() {
+		int daysRented;
+		if (getStatus() == 1) { // returned Video
+			long diff = returnDate.getTime() - rentDate.getTime();
+			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+		} else { // not yet returned
+			long diff = new Date().getTime() - rentDate.getTime();
+			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+		}
+		return daysRented;
 	}
 }

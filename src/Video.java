@@ -18,6 +18,7 @@ public class Video {
 	private boolean rented ;
 	private Map<Integer, IPricePolicy> pricePolicyMap = new HashMap<Integer, IPricePolicy>();
 	private IPricePolicy pricePolicy;
+	private ICalcPoint iCalcPoint;
 
 	public Video(String title, int videoType, int priceCode, Date registeredDate) {
 		this.setTitle(title) ;
@@ -30,7 +31,7 @@ public class Video {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
+		setPointPolicy(priceCode);
 	}
 
 	private void makePricePolicyFactory(int priceCode) {
@@ -44,6 +45,17 @@ public class Video {
 		}
 
 		return pricePolicyMap.get(priceCode);
+	}
+
+	private void setPointPolicy(int priceCode) {
+		if (priceCode == Video.NEW_RELEASE)
+			iCalcPoint = new NewReleaseCalcPoint();
+		else
+			iCalcPoint = new NormalCalcPoint();
+	}
+
+	public int getPoint(int daysRented, int daysRentedLimit) {
+		return iCalcPoint.calcPoint(daysRented, daysRentedLimit, getLateReturnPointPenalty());
 	}
 
 	public double getPrice(int daysRented) {
