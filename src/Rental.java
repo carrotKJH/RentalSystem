@@ -60,14 +60,14 @@ public class Rental {
 
 
 	public int getDaysRented() {
-		int daysRented;
+		long currentDate;
 		if (getStatus() == 1) { // returned Video
-			long diff = returnDate.getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+			currentDate = returnDate.getTime();
 		} else { // not yet returned
-			long diff = new Date().getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+			currentDate = new Date().getTime();
 		}
-		return daysRented;
+		
+		long diff = currentDate - rentDate.getTime();
+		return (int) (diff / (1000 * 60 * 60 * 24)) + 1;	
 	}
 }
